@@ -23,11 +23,30 @@ public class TileLogic : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (_gameLogic.IsAdjacent())
+        var pl = Player.GetComponent<PlayerLogic>();
+
+        var (pX, pY) = GetIndexPosition(pl.transform.position);
+        var (mX, mY) = GetIndexPosition(transform.position);
+
+        if (
+            (pY.Equals(mY) && Mathf.Abs(pX - mX).Equals(1))
+            || (pX.Equals(mX) && Mathf.Abs(pY - mY).Equals(1))
+        )
         {
-            var pl = Player.GetComponent<PlayerLogic>();
             pl.MoveTo(transform.position);
+
+            _gameLogic.SetTileColor(mX, mY, pX, pY);
         }
     }
+
+    private (int, int) GetIndexPosition(Vector3 aPosition)
+    {
+        var pX = aPosition.x / 0.5f;
+        var pY = aPosition.y / 0.5f;
+
+        return (Mathf.FloorToInt(pX), Mathf.FloorToInt(pY));
+    }
+
+
 
 }

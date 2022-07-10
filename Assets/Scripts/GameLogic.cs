@@ -62,9 +62,11 @@ public class GameLogic : MonoBehaviour
             }
     }
 
-    internal bool IsAdjacent()
+    internal void SetTileColor(int fromX, int fromY, int toX, int toY)
     {
-        return true;
+        var fromC = field[fromX, fromY];
+        var toC = field[toX, toY];
+
     }
 
 }
