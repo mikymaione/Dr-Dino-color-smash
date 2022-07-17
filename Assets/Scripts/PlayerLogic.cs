@@ -16,19 +16,32 @@ public class PlayerLogic : MonoBehaviour
 
     private Vector3 _targetPosition;
 
+    private Animator _animator;
+
     private void Start()
     {
         _targetPosition = transform.position;
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Speed * Time.deltaTime);
+        if (transform.position.Equals(_targetPosition))
+        {
+            // end of the walk
+            _animator.SetBool("isMoving", false);
+        }
+        else
+        {
+            // walk to "_targetPosition"
+            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Speed * Time.deltaTime);
+        }
     }
 
     internal void MoveTo(Vector3 position)
     {
         _targetPosition = position;
+        _animator.SetBool("isMoving", true);
     }
 
 

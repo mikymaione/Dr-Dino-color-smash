@@ -36,6 +36,14 @@ public class TileLogic : MonoBehaviour
             _gameLogic.SetTileColor(fromX, fromY, toX, toY);
             playerLogic.MoveTo(transform.position);
         }
+
+        /*
+        if (_gameLogic.IsReacheable(fromX, fromY, toX, toY))
+        {
+            _gameLogic.SetTileColor(fromX, fromY, toX, toY);
+            playerLogic.MoveTo(transform.position);
+        }
+        */
     }
 
     private static (int, int) GetIndexPosition(Vector3 aPosition)
