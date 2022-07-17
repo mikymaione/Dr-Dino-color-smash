@@ -326,6 +326,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 1
+  Players:
+  - {fileID: -2006937056, guid: c4369c16f0461db4dbe87ee63c47cf9f, type: 3}
+  - {fileID: 2137776262, guid: 658b65ecfb4e5fa4a9697598060d9b37, type: 3}
 --- !u!1 &1089174229
 GameObject:
   m_ObjectHideFlags: 0

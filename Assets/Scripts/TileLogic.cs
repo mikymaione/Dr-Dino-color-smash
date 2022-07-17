@@ -35,6 +35,7 @@ public class TileLogic : MonoBehaviour
         {
             _gameLogic.SetTileColor(fromX, fromY, toX, toY);
             playerLogic.MoveTo(transform.position);
+            playerLogic.ChangeSprite(1);
         }
 
         /*

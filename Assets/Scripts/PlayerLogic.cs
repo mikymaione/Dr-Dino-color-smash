@@ -17,11 +17,16 @@ public class PlayerLogic : MonoBehaviour
     private Vector3 _targetPosition;
 
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
+
+    public Sprite[] Players;
+
 
     private void Start()
     {
         _targetPosition = transform.position;
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -36,6 +41,11 @@ public class PlayerLogic : MonoBehaviour
             // walk to "_targetPosition"
             transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Speed * Time.deltaTime);
         }
+    }
+
+    internal void ChangeSprite(int i)
+    {
+        _spriteRenderer.sprite = Players[i];
     }
 
     internal void MoveTo(Vector3 position)
