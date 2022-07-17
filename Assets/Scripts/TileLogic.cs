@@ -15,31 +15,30 @@ public class TileLogic : MonoBehaviour
 
     private GameLogic _gameLogic;
 
-    void Start()
+    private void Start()
     {
         var gameController = GameObject.FindGameObjectWithTag("GameController");
         _gameLogic = gameController.GetComponent<GameLogic>();
     }
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
-        var pl = Player.GetComponent<PlayerLogic>();
+        var playerLogic = Player.GetComponent<PlayerLogic>();
 
-        var (pX, pY) = GetIndexPosition(pl.transform.position);
-        var (mX, mY) = GetIndexPosition(transform.position);
+        var (fromX, fromY) = GetIndexPosition(playerLogic.transform.position);
+        var (toX, toY) = GetIndexPosition(transform.position);
 
-        if (
-            (pY.Equals(mY) && Mathf.Abs(pX - mX).Equals(1))
-            || (pX.Equals(mX) && Mathf.Abs(pY - mY).Equals(1))
-        )
+        var isNearInX = fromX.Equals(toX) && Mathf.Abs(fromY - toY).Equals(1);
+        var isNearInY = fromY.Equals(toY) && Mathf.Abs(fromX - toX).Equals(1);
+
+        if (isNearInX || isNearInY)
         {
-            pl.MoveTo(transform.position);
-
-            _gameLogic.SetTileColor(mX, mY, pX, pY);
+            _gameLogic.SetTileColor(fromX, fromY, toX, toY);
+            playerLogic.MoveTo(transform.position);
         }
     }
 
-    private (int, int) GetIndexPosition(Vector3 aPosition)
+    private static (int, int) GetIndexPosition(Vector3 aPosition)
     {
         var pX = aPosition.x / 0.5f;
         var pY = aPosition.y / 0.5f;

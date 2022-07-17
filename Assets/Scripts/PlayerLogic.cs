@@ -16,12 +16,12 @@ public class PlayerLogic : MonoBehaviour
 
     private Vector3 _targetPosition;
 
-    void Start()
+    private void Start()
     {
         _targetPosition = transform.position;
     }
 
-    void Update()
+    private void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Speed * Time.deltaTime);
     }

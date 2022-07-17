@@ -18,7 +18,8 @@ public class GameLogic : MonoBehaviour
 
     public GameObject tile;
 
-    private GameColors[,] field;
+    private GameColors[,] _fieldColors;
+    private GameObject[,] _fieldTiles;
 
     private static readonly Dictionary<GameColors, Color32> Colors = new()
     {
@@ -32,19 +33,20 @@ public class GameLogic : MonoBehaviour
         { GameColors.AndroidGreen, new Color32(159, 188, 77, 255) }
     };
 
-    void Start()
+    private void Start()
     {
         GenerateLevel();
     }
 
-    void Update()
+    private void Update()
     {
 
     }
 
     private void GenerateLevel()
     {
-        field = new GameColors[tiles, tiles];
+        _fieldColors = new GameColors[tiles, tiles];
+        _fieldTiles = new GameObject[tiles, tiles];
 
         for (var x = 0; x < tiles; x++)
             for (var y = 0; y < tiles; y++)
@@ -55,7 +57,8 @@ public class GameLogic : MonoBehaviour
 
                 var gc = x == 0 && y == 0 ? GameColors.CyanBlueAzure : (GameColors)Random.Range(0, 7);
 
-                field[x, y] = gc;
+                _fieldColors[x, y] = gc;
+                _fieldTiles[x, y] = t;
 
                 var spriteRenderer = t.GetComponent<SpriteRenderer>();
                 spriteRenderer.color = Colors[gc];
@@ -64,9 +67,53 @@ public class GameLogic : MonoBehaviour
 
     internal void SetTileColor(int fromX, int fromY, int toX, int toY)
     {
-        var fromC = field[fromX, fromY];
-        var toC = field[toX, toY];
+        var fromC = _fieldColors[fromX, fromY];
+        var toC = _fieldColors[toX, toY];
 
+        if (!fromC.Equals(toC))
+        {
+            var surroundings = new List<(int, int)> { (fromX, fromY) };
+
+            GetSurrounding(surroundings, fromC, fromX, fromY);
+
+            foreach (var p in surroundings)
+            {
+                var t = _fieldTiles[p.Item1, p.Item2];
+                var spriteRenderer = t.GetComponent<SpriteRenderer>();
+                spriteRenderer.color = Colors[toC];
+
+                _fieldColors[p.Item1, p.Item2] = toC;
+            }
+        }
+    }
+
+    private void GetSurrounding(List<(int, int)> surroundings, GameColors c, (int, int) p)
+    {
+        GetSurrounding(surroundings, c, p.Item1, p.Item2);
+    }
+
+    private void GetSurrounding(List<(int, int)> surroundings, GameColors c, int x, int y)
+    {
+        var up = (x, y - 1);
+        var down = (x, y + 1);
+        var left = (x - 1, y);
+        var right = (x + 1, y);
+
+        (int, int)[] toTest = { up, down, left, right };
+
+        foreach (var p in toTest)
+            if (PositionExists(p) &&
+                !surroundings.Contains(p) &&
+                    _fieldColors[p.Item1, p.Item2].Equals(c))
+            {
+                surroundings.Add(p);
+                GetSurrounding(surroundings, c, p);
+            }
+    }
+
+    private bool PositionExists((int, int) p)
+    {
+        return p.Item1 > -1 && p.Item2 > -1 && p.Item1 < tiles && p.Item2 < tiles;
     }
 
 }
