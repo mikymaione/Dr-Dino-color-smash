@@ -7,6 +7,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -109,6 +110,31 @@ public class GameLogic : MonoBehaviour
                 surroundings.Add(p);
                 GetSurrounding(surroundings, c, p);
             }
+    }
+
+    internal bool IsReacheable(int fromX, int fromY, int toX, int toY)
+    {
+        var fromC = _fieldColors[fromX, fromY];
+        var toC = _fieldColors[toX, toY];
+
+        if (fromC.Equals(toC))
+        {
+            if (fromX == toX)
+            {
+                var dir = fromY > toY ? -1 : 1;
+
+                return IsReacheable(fromX, fromY + dir, toX, toY);
+            }
+
+            if (fromY == toY)
+            {
+                var dir = fromX > toX ? -1 : 1;
+
+                return IsReacheable(fromX + dir, fromY, toX, toY);
+            }
+        }
+
+        return false;
     }
 
     private bool PositionExists((int, int) p)
