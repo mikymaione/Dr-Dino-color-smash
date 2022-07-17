@@ -66,12 +66,16 @@ public class GameLogic : MonoBehaviour
             }
     }
 
-    internal void SetTileColor(int fromX, int fromY, int toX, int toY)
+    internal GameColors SetTileColor(int fromX, int fromY, int toX, int toY)
     {
         var fromC = _fieldColors[fromX, fromY];
         var toC = _fieldColors[toX, toY];
 
-        if (!fromC.Equals(toC))
+        if (fromC.Equals(toC))
+        {
+            return fromC;
+        }
+        else
         {
             var surroundings = new List<(int, int)> { (fromX, fromY) };
 
@@ -85,6 +89,8 @@ public class GameLogic : MonoBehaviour
 
                 _fieldColors[p.Item1, p.Item2] = toC;
             }
+
+            return toC;
         }
     }
 
@@ -119,19 +125,29 @@ public class GameLogic : MonoBehaviour
 
         if (fromC.Equals(toC))
         {
+            if (fromX == toX && fromY == toY)
+                return true;
+
             if (fromX == toX)
             {
-                var dir = fromY > toY ? -1 : 1;
+                var dir = toY >= fromY ? 1 : -1;
 
                 return IsReacheable(fromX, fromY + dir, toX, toY);
             }
 
             if (fromY == toY)
             {
-                var dir = fromX > toX ? -1 : 1;
+                var dir = toX >= fromX ? 1 : -1;
 
                 return IsReacheable(fromX + dir, fromY, toX, toY);
             }
+        }
+        else
+        {
+            var isNearInX = fromX.Equals(toX) && Mathf.Abs(fromY - toY).Equals(1);
+            var isNearInY = fromY.Equals(toY) && Mathf.Abs(fromX - toX).Equals(1);
+
+            return isNearInX || isNearInY;
         }
 
         return false;

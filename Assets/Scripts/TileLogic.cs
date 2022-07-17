@@ -28,23 +28,12 @@ public class TileLogic : MonoBehaviour
         var (fromX, fromY) = GetIndexPosition(playerLogic.transform.position);
         var (toX, toY) = GetIndexPosition(transform.position);
 
-        var isNearInX = fromX.Equals(toX) && Mathf.Abs(fromY - toY).Equals(1);
-        var isNearInY = fromY.Equals(toY) && Mathf.Abs(fromX - toX).Equals(1);
-
-        if (isNearInX || isNearInY)
-        {
-            _gameLogic.SetTileColor(fromX, fromY, toX, toY);
-            playerLogic.MoveTo(transform.position);
-            playerLogic.ChangeSprite(1);
-        }
-
-        /*
         if (_gameLogic.IsReacheable(fromX, fromY, toX, toY))
         {
-            _gameLogic.SetTileColor(fromX, fromY, toX, toY);
+            var toC = _gameLogic.SetTileColor(fromX, fromY, toX, toY);
             playerLogic.MoveTo(transform.position);
+            playerLogic.ChangeSprite((int)toC);
         }
-        */
     }
 
     private static (int, int) GetIndexPosition(Vector3 aPosition)
