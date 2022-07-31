@@ -11,7 +11,9 @@ using UnityEngine;
 
 public class TileLogic : MonoBehaviour
 {
+
     private GameLogic _gameLogic;
+
 
     private void Start()
     {
@@ -21,11 +23,7 @@ public class TileLogic : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _gameLogic.MoveDinosaur(transform.position);
+        _gameLogic.MovePlayer(transform.position);
     }
-
-
-
-
 
 }

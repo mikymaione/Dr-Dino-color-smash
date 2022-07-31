@@ -7,7 +7,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +24,7 @@ public class GameLogic : MonoBehaviour
 
     private PlayerLogic _playerLogic;
 
+
     private static readonly Dictionary<GameColors, Color32> Colors = new()
     {
         { GameColors.CyanBlueAzure, new Color32(77, 146, 188, 255) },
@@ -40,6 +40,7 @@ public class GameLogic : MonoBehaviour
     private void Start()
     {
         GenerateLevel();
+
         _playerLogic = player.GetComponent<PlayerLogic>();
     }
 
@@ -73,7 +74,7 @@ public class GameLogic : MonoBehaviour
         return (Mathf.FloorToInt(pX), Mathf.FloorToInt(pY));
     }
 
-    internal void MoveDinosaur(Vector3 dest)
+    internal void MovePlayer(Vector3 dest)
     {
         var (toX, toY) = GetIndexPosition(dest);
         var (fromX, fromY) = GetIndexPosition(player.transform.position);
@@ -82,9 +83,24 @@ public class GameLogic : MonoBehaviour
         {
             var toC = SetTileColor(fromX, fromY, toX, toY);
 
-            _playerLogic.MoveTo(dest);
-            _playerLogic.ChangeDinosaur(toC);
+            _playerLogic.MoveTo(dest, toC);
+
+            if (IsGameFinished())
+            {
+
+            }
         }
+    }
+
+    private bool IsGameFinished()
+    {
+        // check that tiles are the same color
+        for (var x = 0; x < tiles; x++)
+            for (var y = 0; y < tiles; y++)
+                if (_fieldColors[0, 0] != _fieldColors[x, y])
+                    return false;
+
+        return true;
     }
 
     private GameColors SetTileColor(int fromX, int fromY, int toX, int toY)

@@ -7,13 +7,13 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
 using System;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
 public class PlayerLogic : MonoBehaviour
 {
+
     [Range(0.1f, 100f)]
     public float Speed = 1f;
 
@@ -23,6 +23,7 @@ public class PlayerLogic : MonoBehaviour
 
     private Animator _animator;
     private SpriteLibrary _spriteLibrary;
+
 
     private void Start()
     {
@@ -45,12 +46,7 @@ public class PlayerLogic : MonoBehaviour
         }
     }
 
-    internal void ChangeDinosaur(GameColors c)
-    {
-        _spriteLibrary.spriteLibraryAsset = Players[Convert.ToInt32(c)];
-    }
-
-    internal void MoveTo(Vector3 position)
+    internal void MoveTo(Vector3 position, GameColors c)
     {
         var absV = transform.position.x > position.x ? -1 : 1;
 
@@ -58,7 +54,8 @@ public class PlayerLogic : MonoBehaviour
 
         _targetPosition = position;
         _animator.SetBool("isMoving", true);
-    }
 
+        _spriteLibrary.spriteLibraryAsset = Players[Convert.ToInt32(c)];
+    }
 
 }
