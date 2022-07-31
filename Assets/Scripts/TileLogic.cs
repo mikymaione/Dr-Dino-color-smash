@@ -11,8 +11,6 @@ using UnityEngine;
 
 public class TileLogic : MonoBehaviour
 {
-    public GameObject Player;
-
     private GameLogic _gameLogic;
 
     private void Start()
@@ -23,26 +21,10 @@ public class TileLogic : MonoBehaviour
 
     private void OnMouseDown()
     {
-        var playerLogic = Player.GetComponent<PlayerLogic>();
-
-        var (fromX, fromY) = GetIndexPosition(playerLogic.transform.position);
-        var (toX, toY) = GetIndexPosition(transform.position);
-
-        if (_gameLogic.IsReacheable(fromX, fromY, toX, toY))
-        {
-            var toC = _gameLogic.SetTileColor(fromX, fromY, toX, toY);
-            playerLogic.MoveTo(transform.position);
-            playerLogic.ChangeSprite((int)toC);
-        }
+        _gameLogic.MoveDinosaur(transform.position);
     }
 
-    private static (int, int) GetIndexPosition(Vector3 aPosition)
-    {
-        var pX = aPosition.x / 0.5f;
-        var pY = aPosition.y / 0.5f;
 
-        return (Mathf.FloorToInt(pX), Mathf.FloorToInt(pY));
-    }
 
 
 

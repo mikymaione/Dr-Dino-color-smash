@@ -18,9 +18,12 @@ public class GameLogic : MonoBehaviour
     public int tiles = 10;
 
     public GameObject tile;
+    public GameObject player;
 
     private GameColors[,] _fieldColors;
     private GameObject[,] _fieldTiles;
+
+    private PlayerLogic _playerLogic;
 
     private static readonly Dictionary<GameColors, Color32> Colors = new()
     {
@@ -37,11 +40,7 @@ public class GameLogic : MonoBehaviour
     private void Start()
     {
         GenerateLevel();
-    }
-
-    private void Update()
-    {
-
+        _playerLogic = player.GetComponent<PlayerLogic>();
     }
 
     private void GenerateLevel()
@@ -66,32 +65,53 @@ public class GameLogic : MonoBehaviour
             }
     }
 
-    internal GameColors SetTileColor(int fromX, int fromY, int toX, int toY)
+    private static (int, int) GetIndexPosition(Vector3 aPosition)
+    {
+        var pX = aPosition.x / 0.5f;
+        var pY = aPosition.y / 0.5f;
+
+        return (Mathf.FloorToInt(pX), Mathf.FloorToInt(pY));
+    }
+
+    internal void MoveDinosaur(Vector3 dest)
+    {
+        var (toX, toY) = GetIndexPosition(dest);
+        var (fromX, fromY) = GetIndexPosition(player.transform.position);
+
+        if (IsReachable(fromX, fromY, toX, toY))
+        {
+            var toC = SetTileColor(fromX, fromY, toX, toY);
+
+            _playerLogic.MoveTo(dest);
+            _playerLogic.ChangeDinosaur(toC);
+        }
+    }
+
+    private GameColors SetTileColor(int fromX, int fromY, int toX, int toY)
     {
         var fromC = _fieldColors[fromX, fromY];
         var toC = _fieldColors[toX, toY];
 
         if (fromC.Equals(toC))
-        {
             return fromC;
-        }
-        else
+
+        var surroundings = new List<(int, int)>
         {
-            var surroundings = new List<(int, int)> { (fromX, fromY) };
+            (fromX, fromY)
+        };
 
-            GetSurrounding(surroundings, fromC, fromX, fromY);
+        GetSurrounding(surroundings, fromC, fromX, fromY);
 
-            foreach (var p in surroundings)
-            {
-                var t = _fieldTiles[p.Item1, p.Item2];
-                var spriteRenderer = t.GetComponent<SpriteRenderer>();
-                spriteRenderer.color = Colors[toC];
+        foreach (var p in surroundings)
+        {
+            var t = _fieldTiles[p.Item1, p.Item2];
+            var spriteRenderer = t.GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Colors[toC];
 
-                _fieldColors[p.Item1, p.Item2] = toC;
-            }
-
-            return toC;
+            _fieldColors[p.Item1, p.Item2] = toC;
         }
+
+        return toC;
     }
 
     private void GetSurrounding(List<(int, int)> surroundings, GameColors c, (int, int) p)
@@ -118,7 +138,7 @@ public class GameLogic : MonoBehaviour
             }
     }
 
-    internal bool IsReacheable(int fromX, int fromY, int toX, int toY)
+    private bool IsReachable(int fromX, int fromY, int toX, int toY)
     {
         var fromC = _fieldColors[fromX, fromY];
         var toC = _fieldColors[toX, toY];
@@ -132,14 +152,14 @@ public class GameLogic : MonoBehaviour
             {
                 var dir = toY >= fromY ? 1 : -1;
 
-                return IsReacheable(fromX, fromY + dir, toX, toY);
+                return IsReachable(fromX, fromY + dir, toX, toY);
             }
 
             if (fromY == toY)
             {
                 var dir = toX >= fromX ? 1 : -1;
 
-                return IsReacheable(fromX + dir, fromY, toX, toY);
+                return IsReachable(fromX + dir, fromY, toX, toY);
             }
         }
         else
