@@ -8,7 +8,6 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +17,7 @@ public class GameLogic : MonoBehaviour
     [Range(10, 1000)]
     public int tiles = 10;
 
-    public GameObject win, lose;
+    public GameObject win, lose, restart;
     public Slider slider;
     public GameObject tile;
     public GameObject player;
@@ -94,11 +93,15 @@ public class GameLogic : MonoBehaviour
                 if (IsGameFinished())
                 {
                     win.SetActive(true);
+                    restart.SetActive(true);
                 }
                 else
                 {
                     if (slider.value == 0)
+                    {
                         lose.SetActive(true);
+                        restart.SetActive(true);
+                    }
                 }
             }
         }
